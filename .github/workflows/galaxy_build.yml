@@ -24,6 +24,7 @@ jobs:
       - name: Update version in collection.yml
         run: |
           sed -i 's/version: "[^"]*"/version: "'$(date +%Y%m%d%H%M%S')'"/' collection.yml
+
         
       - name: Build collection
         run: ansible-galaxy collection build -vvv --output-path . --requirements-file requirements.txt --force

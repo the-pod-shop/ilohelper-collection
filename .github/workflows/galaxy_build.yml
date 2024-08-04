@@ -6,9 +6,12 @@ on:
       - main  # Ändern Sie dies entsprechend Ihrem Hauptbranch
 
 jobs:
+  
   build-and-publish:
     runs-on: ubuntu-latest
+    permissions: write-all
     steps:
+      
       - name: Checkout repository
         uses: actions/checkout@v2
       

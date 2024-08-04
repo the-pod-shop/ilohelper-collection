@@ -19,7 +19,9 @@ jobs:
         run: echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Get previous commit ID
-        run: echo "PREV_COMMIT_ID=$(git rev-parse HEAD^)" >> $GITHUB_ENV
+        run: |
+          PREV_COMMIT_ID=$(git rev-list --max-parents=0 HEAD | head -n 1)
+          echo "PREV_COMMIT_ID=$PREV_COMMIT_ID" >> $GITHUB_ENV
 
       - name: Compare commits
         run: |

@@ -6,28 +6,49 @@ on:
       - main  # Ändern Sie dies entsprechend Ihrem Hauptbranch
 
 jobs:
-  
-  build-and-publish:
+  job1:
     runs-on: ubuntu-latest
-    permissions: write-all
     steps:
-      
-      - name: Checkout repository
-        uses: actions/checkout@v2
-      
-      - name: Set up Python
-        uses: actions/setup-python@v2
+      - name: Cache Python dependencies
+        uses: actions/cache@v2
         with:
-          python-version: '3.x'
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
 
       - name: Install dependencies
         run: |
           pip install ansible[galaxy]
-          
+
+  build-and-publish:
+    runs-on: ubuntu-latest
+    permissions: write-all
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+      
+      - name: Cache Python dependencies
+        uses: actions/cache@v2
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+    #  - name: Set up Python
+    #    uses: actions/setup-python@v2
+    #    with:
+    #      python-version: '3.x'
+#
+    #  - name: Install dependencies
+    #    run: |
+    #      pip install ansible[galaxy]
+    #      
       - name: Update version in collection.yml
         run:  |
                 ls -r -l
-                ./utils/bash/update_version.sh ./galaxy.yml
+                bash ./utils/bash/update_version.sh ./galaxy.yml
 
         
       - name: Build collection

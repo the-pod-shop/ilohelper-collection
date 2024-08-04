@@ -1,5 +1,4 @@
 #!/bin/bash
-
 GALAXY_YML_PATH="$1"
 current_version=$(grep '^version:' $GALAXY_YML_PATH | cut -d'"' -f2)
 echo "Old version: $current_version"

@@ -27,13 +27,13 @@ jobs:
         id: check_changes
         run: |
             # Überprüfen Sie, ob sich plugin_requirements.yml geändert hat
-            dif=git diff $PREV_COMMIT_ID $COMMIT_ID  'plugin_requirements.yml' HEAD
+            dif=
             echo $dif
-            CHANGED=$( dif | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
-            if [ "$CHANGED" = "true" ]; then
+            CHANGED=$(git diff HEAD 'plugin_requirements.yml')
+            if [ -z "$CHANGED" ]; then
               PLUGIN_REQS=$(cat plugin_requirements.yml)
-              APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
               echo $PLUGIN_REQS
+              APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
               echo $APT_PKG_LIST
               echo "PLUGIN_REQS=$PLUGIN_REQS" >> $GITHUB_ENV
               echo "APT_PKG_LIST=$APT_PKG_LIST" >> $GITHUB_ENV

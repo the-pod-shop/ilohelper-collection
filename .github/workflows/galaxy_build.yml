@@ -16,16 +16,14 @@ jobs:
         uses: actions/checkout@v2
       
       - name: Get current commit ID
-        id: current_commit
-        run: echo "::set-output name=commit_id::$(git rev-parse HEAD)"
+        run: echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
       - name: Get previous commit ID
-        id: prev_commit
-        run: echo "::set-output name=prev_commit_id::$(git rev-parse HEAD^)"
+        run: echo "PREV_COMMIT_ID=$(git rev-parse HEAD^)" >> $GITHUB_ENV
 
       - name: Compare commits
         run: |
-          git diff --name-only ${{ steps.prev_commit.outputs.prev_commit_id }} ${{ steps.current_commit.outputs.commit_id }} | grep 'requirements.yml'
+          git diff --name-only $PREV_COMMIT_ID $COMMIT_ID | grep 'requirements.yml'
           if [ $? -eq 0 ]; then
             echo "requirements.yml has been modified."
           else

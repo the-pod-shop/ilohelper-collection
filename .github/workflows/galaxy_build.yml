@@ -18,15 +18,19 @@ jobs:
       - name: Check if requirements have changed
         id: check_changes
         run: |
-          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
-          if [ "$CHANGED" = "true" ]; then
-            PLUGIN_REQS=$(cat plugin_requirements.yml)
-            APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
-            echo "::set-output name=plugin_reqs::$PLUGIN_REQS"
-            echo "::set-output name=apt_pkg_list::$APT_PKG_LIST"
-          else
-            echo "::set-output name=changed::false"
-          fi
+            # Überprüfen Sie, ob sich plugin_requirements.yml geändert hat
+            CHANGED=$(git diff --name-only HEAD^ HEAD | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
+            if [ "$CHANGED" = "true" ]; then
+              # Lesen Sie die Inhalte der Dateien
+              PLUGIN_REQS=$(cat plugin_requirements.yml)
+              APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
+              # Setzen Sie die Outputs als Umgebungsvariablen
+              echo "PLUGIN_REQS=$PLUGIN_REQS" >> $GITHUB_ENV
+              echo "APT_PKG_LIST=$APT_PKG_LIST" >> $GITHUB_ENV
+            else
+              echo "CHANGED=false" >> $GITHUB_ENV
+            fi
+
 
         
 #      - name: Build collection

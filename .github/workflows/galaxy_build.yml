@@ -6,57 +6,35 @@ on:
       - main  # Ändern Sie dies entsprechend Ihrem Hauptbranch
 
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Cache Python dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install dependencies
-        run: |
-          pip install ansible[galaxy]
-
-  build-and-publish:
+  
+  uild-and-publish:
     runs-on: ubuntu-latest
     permissions: write-all
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
       
-      - name: Cache Python dependencies
-        uses: actions/cache@v2
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-    #  - name: Set up Python
-    #    uses: actions/setup-python@v2
-    #    with:
-    #      python-version: '3.x'
-#
-    #  - name: Install dependencies
-    #    run: |
-    #      pip install ansible[galaxy]
-    #      
-      - name: Update version in collection.yml
-        run:  |
-                ls -r -l
-                bash ./utils/bash/update_version.sh ./galaxy.yml
+      - name: Check if requirements have changed
+        id: check_changes
+        run: |
+          CHANGED=$(git diff --name-only HEAD^ HEAD | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
+          if [ "$CHANGED" = "true" ]; then
+            PLUGIN_REQS=$(cat plugin_requirements.yml)
+            APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
+            echo "::set-output name=plugin_reqs::$PLUGIN_REQS"
+            echo "::set-output name=apt_pkg_list::$APT_PKG_LIST"
+          else
+            echo "::set-output name=changed::false"
+          fi
 
         
-      - name: Build collection
-        run: ansible-galaxy collection build -vvv --output-path . --requirements-file requirements.txt --force
-        env:
-          ANSIBLE_GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}  # Stellen Sie sicher, dass GALAXY_API_KEY in Ihren Secrets gesetzt ist
-
-      - name: Publish collection
-        run: ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} ./ji_podhead-ilohelper-*.tar.gz
-        env:
-          ANSIBLE_GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}
+#      - name: Build collection
+#        run: ansible-galaxy collection build -vvv --output-path . --requirements-file requirements.txt --force
+#        env:
+#          ANSIBLE_GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}  # Stellen Sie sicher, dass GALAXY_API_KEY in Ihren Secrets gesetzt ist
+#
+#      - name: Publish collection
+#        run: ansible-galaxy collection publish --api-key ${{ secrets.GALAXY_API_KEY }} ./ji_podhead-ilohelper-*.tar.gz
+#        env:
+#          ANSIBLE_GALAXY_API_KEY: ${{ secrets.GALAXY_API_KEY }}

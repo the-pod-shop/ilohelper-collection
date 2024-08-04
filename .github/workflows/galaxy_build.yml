@@ -23,8 +23,8 @@ jobs:
           
       - name: Update version in collection.yml
         run: |
-              extracted_version=$(collection.yml | sed -n 's/^.*version: "\(.*\)"/\1/p')
               GALAXY_YML_PATH="./galaxy.yml"
+              extracted_version=$(GALAXY_YML_PATH.yml | sed -n 's/^.*version: "\(.*\)"/\1/p')
               current_version=$(grep '^version:' $GALAXY_YML_PATH | cut -d'"' -f2)
               IFS='.' read -ra parts <<< "$current_version"
               for (( i=0; i<${#parts[@]}; i++ )); do

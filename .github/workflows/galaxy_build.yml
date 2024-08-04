@@ -12,12 +12,13 @@ jobs:
     permissions: write-all
 
     steps:
-      - name: test
-        run: | 
-              python ./utils/python/parse_json.py ./plugin_requirements.json 
       - name: Checkout repository
         uses: actions/checkout@v2
       
+      - name: test
+        run: | 
+              python ./utils/python/parse_json.py ./plugin_requirements.json 
+
       - name: Get current commit ID
         run: echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 

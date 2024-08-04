@@ -1,7 +1,7 @@
 import subprocess
 import os
 
-def main():
+def dif():
     # Get current commit ID
     result = subprocess.run(['git', 'rev-parse', 'HEAD'], capture_output=True, text=True)
     os.environ['COMMIT_ID'] = result.stdout.strip()
@@ -15,4 +15,4 @@ def main():
     os.environ['CHANGED'] = 'true' if result.stdout.strip() else 'false'
 
 if __name__ == "__main__":
-    main()
+    dif()

@@ -1,45 +1,36 @@
 import yaml
 import sys
 
-def read_and_print_versions(file_path):
+def read_and_format_yaml(file_path):
     """
-    Reads a YAML file and prints out package versions without recursion, 
-    designed to handle a maximum depth of two levels starting with a package manager.
+    Reads a YAML file and formats its contents into a specific dictionary structure, reflecting the hierarchy of package managers and their packages.
     """
     try:
         with open(file_path, 'r') as file:
             data = yaml.safe_load(file)
             
-            def extract_versions(data, package_manager=None):
-                """
-                Recursively traverses the data structure to extract and print package versions.
-                Identifies package managers using the optional parameter.
-                """
-                if package_manager:
-                    print(package_manager)
-                
-                if isinstance(data, dict):
-                    for key, value in data.items():
-                        if isinstance(value, dict):
-                            extract_versions(value, key)
-                        else:
-                            print(f"{key}: {value}")
-                elif isinstance(data, list):
-                    for item in data:
-                        if isinstance(item, dict):
-                            extract_versions(item, None)
-                        else:
-                            print(item)
+            # Function to format the data structure into the desired output format
+            def format_data(data, parent_key='', result={}):
+                for key, value in data.items():
+                    full_key = f'{parent_key}.{key}' if parent_key else key
+                    if isinstance(value, dict):
+                        format_data(value, full_key, result)
+                    else:
+                        result[full_key] = value
+                return result
             
-            extract_versions(data)
+            formatted_data = format_data(data)
+            return formatted_data
     except FileNotFoundError:
         print(f"File '{file_path}' not found.")
     except yaml.YAMLError as error:
         print(f"Error reading YAML file: {error}")
 
 if __name__ == "__main__":
+    # Checks if a file path has been passed as an argument
     if len(sys.argv) > 1:
         file_path = sys.argv[1]
-        read_and_print_versions(file_path)
+        formatted_data = read_and_format_yaml(file_path)
+        print(formatted_data)
     else:
-        print("No file path provided. Please specify the path as an argument.")
+        print("No file path provided. Specify the path as an argument.")

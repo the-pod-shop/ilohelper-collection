@@ -1,8 +1,8 @@
-requirements:
-  python:
-    redfish: latest
-    pyyaml: latest
-    pandas: latest
-    matplotlib: latest
-  apt:
-    ansible: latest
+
+python:
+  redfish: latest
+  pyyaml: latest
+  pandas: latest
+  matplotlib: latest
+apt:
+  ansible: latest

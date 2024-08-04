@@ -9,7 +9,7 @@ a little python wrapper class and cli tool for the [ilo restful api](https://hew
     
 ## Installation
 
-Requires Python and the `redfish` library. Install it using:
+Requires Python and the `redfish` library. <br>Install it using:
   ```bash
   $ pip install redfish
   ```
@@ -139,7 +139,7 @@ Requires Python and the `redfish` library. Install it using:
 
 ### Examples
 
-- get the status and create your ilohelper object:
+- get the status:
   ```bash
   $ python ./ilohelper.py serverStatus 192.168.200.11 Administrator AGSBTGWW 
   ```

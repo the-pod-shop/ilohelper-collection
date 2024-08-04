@@ -22,8 +22,7 @@ jobs:
           pip install ansible[galaxy]
           
       - name: Update version in collection.yml
-        run: |
-              sh ../utils/bash/update_version.sh ../galaxy.yml
+        run:  sh ../utils/bash/update_version.sh ../galaxy.yml
 
         
       - name: Build collection

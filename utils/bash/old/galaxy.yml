@@ -1,7 +1,7 @@
 namespace: "ji_podhead"
 name: "ilohelper"
 description:  "a little python wrapper class and cli tool for the ilo restful api. You can, Start,Stop, get Server Status and temperatures. 🚀🚀 start you server and wait untill the boot process finishes using a single command 🚀🚀 "
-version: "2.1.7"
+version: "1.0.52"
 readme: "README.md"
 authors:
     - "ji-podhead (https://https://www.github.com/ji-podhead)"

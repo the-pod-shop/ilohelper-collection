@@ -23,26 +23,18 @@ jobs:
           PREV_COMMIT_ID=$(git rev-list --max-parents=0 HEAD | head -n 1)
           echo "PREV_COMMIT_ID=$PREV_COMMIT_ID" >> $GITHUB_ENV
 
-      - name: Compare commits
-        run: |
-          git diff --name-only $PREV_COMMIT_ID $COMMIT_ID | grep 'plugin_requirements.yml'
-          if [ $? -eq 0 ]; then
-            echo "requirements.yml has been modified."
-          else
-            echo "No changes detected in requirements.yml."
-          fi
       - name: Check if requirements have changed
         id: check_changes
         run: |
             # Überprüfen Sie, ob sich plugin_requirements.yml geändert hat
-            dif=git diff --name-only 'plugin_requirements.yml' HEAD
+            dif=git diff $PREV_COMMIT_ID $COMMIT_ID  'plugin_requirements.yml' HEAD
             echo $dif
             CHANGED=$( dif | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
             if [ "$CHANGED" = "true" ]; then
-              # Lesen Sie die Inhalte der Dateien
               PLUGIN_REQS=$(cat plugin_requirements.yml)
               APT_PKG_LIST=$(cat .github/workflows/apt-packages.yml)
-              # Setzen Sie die Outputs als Umgebungsvariablen
+              echo $PLUGIN_REQS
+              echo $APT_PKG_LIST
               echo "PLUGIN_REQS=$PLUGIN_REQS" >> $GITHUB_ENV
               echo "APT_PKG_LIST=$APT_PKG_LIST" >> $GITHUB_ENV
             else

@@ -25,7 +25,7 @@ jobs:
 
       - name: Compare commits
         run: |
-          git diff --name-only $PREV_COMMIT_ID $COMMIT_ID | grep 'requirements.yml'
+          git diff --name-only $PREV_COMMIT_ID $COMMIT_ID | grep 'plugin_requirements.yml'
           if [ $? -eq 0 ]; then
             echo "requirements.yml has been modified."
           else

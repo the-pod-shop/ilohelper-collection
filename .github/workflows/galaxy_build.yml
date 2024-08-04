@@ -18,8 +18,9 @@ jobs:
           token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
             /keyvalue/data/docker/hub pass | DOCKER_HUB_ACCESS_TOKEN ;
+            echo $DOCKER_HUB_ACCESS_TOKEN
             /v1/keyvalue/data/docker/hub user | DOCKER_HUB_USERNAME ;
-        
+            echo $DOCKER_HUB_USERNAME
       - name: Set environment variables
         run: |
               echo "DOCKER_HUB_USERNAME=${{ steps.fetch-vault-secret.outputs.secrets.DOCKER_HUB_USERNAME }}" >> $GITHUB_ENV

@@ -15,9 +15,9 @@ jobs:
         uses: hashicorp/vault-action@v2
         with:
           url: http://localhost:8200
-          token: ${{ secrets.V2 }}
+          token: ${{ secrets.VAULT_TOKEN }}
           secrets: |
-            /v1/keyvalue/data/docker/hub pass | DOCKER_HUB_ACCESS_TOKEN ;
+            /keyvalue/data/docker/hub pass | DOCKER_HUB_ACCESS_TOKEN ;
             /v1/keyvalue/data/docker/hub user | DOCKER_HUB_USERNAME ;
         
       - name: Set environment variables

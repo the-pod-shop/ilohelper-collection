@@ -19,7 +19,9 @@ jobs:
         id: check_changes
         run: |
             # Überprüfen Sie, ob sich plugin_requirements.yml geändert hat
-            CHANGED=$(git diff --name-only HEAD^ HEAD | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
+            dif=git diff --name-only HEAD^ HEAD
+            echo $dif
+            CHANGED=$( dif | grep -q 'plugin_requirements.yml' && echo "true" || echo "false")
             if [ "$CHANGED" = "true" ]; then
               # Lesen Sie die Inhalte der Dateien
               PLUGIN_REQS=$(cat plugin_requirements.yml)

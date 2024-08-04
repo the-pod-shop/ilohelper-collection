@@ -24,7 +24,7 @@ jobs:
       - name: Update version in collection.yml
         run:  |
                 ls -r -l
-                sh ./utils/bash/update_version.sh ./galaxy.yml
+                ./utils/bash/update_version.sh ./galaxy.yml
 
         
       - name: Build collection

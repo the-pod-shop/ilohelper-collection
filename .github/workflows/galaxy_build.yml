@@ -29,8 +29,7 @@ jobs:
           context: .
           file: ./Dockerfile
           push: true
-          tags: 1.0
-          labels: jipodhead/ilohelper-coll
+          tags: jipodhead/ilohelper-coll:latest
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
           

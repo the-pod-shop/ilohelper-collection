@@ -9,7 +9,29 @@ jobs:
     steps:
       - name: Check out the repo
         uses: actions/checkout@v4
+      - name: test
+        run: | 
+              python ./utils/python/parse_json.py ./plugin_requirements.json 
+      - name: Get current commit ID
+        run: echo "COMMIT_ID=$(git rev-parse HEAD)" >> $GITHUB_ENV
 
+      - name: Get previous commit ID
+        run: |
+          PREV_COMMIT_ID=$(git rev-list --max-parents=0 HEAD | head -n 1)
+          echo "PREV_COMMIT_ID=$PREV_COMMIT_ID" >> $GITHUB_ENV
+      - name: Check if requirements have changed
+        id: check_changes
+        run: |
+            # Überprüfen Sie, ob sich plugin_requirements.yml geändert hat
+            dif=
+            echo $dif
+            CHANGED=$(git diff HEAD 'plugin_requirements.yml')
+            if [ -z "$CHANGED" ]; then
+              
+            else
+              echo "CHANGED=false" >> $GITHUB_ENV
+            fi
+          
       - name: Log in to Docker Hub
         uses: docker/login-action@f4ef78c080cd8ba55a85445d5b36e214a81df20a
         with:
@@ -17,6 +39,7 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
       - name: Extract metadata (tags, labels) for Docker
+        if: CHANGED==false
         id: meta
         uses: docker/metadata-action@9ec57ed1fcdbf14dcef7dfbe97b2010124a938b7
         with:
